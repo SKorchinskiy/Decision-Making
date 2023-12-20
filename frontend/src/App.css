@@ -1,0 +1,26 @@
+.app-container {
+  display: flex;
+  width: 100wh;
+  height: 100vh;
+  background-color: #4a55a2;
+}
+
+.app-container-left {
+  margin: 0;
+  width: 30%;
+}
+
+.app-container-right {
+  margin: 0;
+  width: 70%;
+}
+
+.app-container-left,
+.app-container-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 30px;
+}
