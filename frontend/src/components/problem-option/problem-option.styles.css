@@ -1,0 +1,22 @@
+.problem-option-container {
+  margin: 10px;
+  background-color: #a0bfe0;
+  padding: 30px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.problem-option-container:hover {
+  background-color: rgba(74, 85, 162, 0.5);
+}
+
+.problem-selected {
+  background-color: rgba(74, 85, 162, 0.8);
+  color: whitesmoke;
+}
+
+.bullet {
+  width: 30px;
+  height: 30px;
+  background-color: #4a55a2;
+}
