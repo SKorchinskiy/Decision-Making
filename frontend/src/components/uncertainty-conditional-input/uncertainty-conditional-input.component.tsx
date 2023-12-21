@@ -193,7 +193,6 @@ export default function UncertaintyConditionInput({
                   const pos = index;
                   const row = Math.floor(pos / problemSettings.states);
                   const col = Math.floor(pos % problemSettings.states);
-                  console.log({ row, col });
                   newMatrix[row][col] = value;
                   handleProblemSettingsChange({
                     matrix: newMatrix,
@@ -202,6 +201,41 @@ export default function UncertaintyConditionInput({
               />
             ))}
           </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          &#8226; Оптимістичність
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <input
+            type="number"
+            step={0.1}
+            min={0}
+            max={1}
+            defaultValue={0}
+            style={{
+              width: "50px",
+              height: "30px",
+              border: "0",
+              textAlign: "center",
+              borderRadius: "5px",
+            }}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              const value = +e.currentTarget.value;
+              handleProblemSettingsChange({
+                alpha: value,
+              });
+            }}
+          />
         </div>
       </div>
     </div>
