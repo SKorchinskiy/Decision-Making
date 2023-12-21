@@ -1,5 +1,6 @@
 .app-container {
   display: flex;
+  justify-content: center;
   width: 100wh;
   height: 100vh;
   background-color: #4a55a2;
