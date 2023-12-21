@@ -9,6 +9,8 @@ export type ProblemSettings = {
   states: number;
   probabilities?: Array<number>;
   matrix: Array<Array<number>>;
+  minProfit?: number;
+  alpha?: number;
 };
 
 const initialProblemSettings: ProblemSettings = {
@@ -18,7 +20,17 @@ const initialProblemSettings: ProblemSettings = {
   matrix: [[0]],
 };
 
-export default function MainBoard() {
+export type MainBoardProps = {
+  onModalHideHandler: (_: boolean) => void;
+  riskResultsHandler: (
+    results: { tag: string; value: number; z: Array<number> }[]
+  ) => void;
+};
+
+export default function MainBoard({
+  onModalHideHandler,
+  riskResultsHandler,
+}: MainBoardProps) {
   const [problemType, setProblemType] = useState("");
   const [problemSettings, setProblemSettings] = useState<ProblemSettings>(
     initialProblemSettings
@@ -75,18 +87,54 @@ export default function MainBoard() {
             textAlign: "center",
             color: "black",
           }}
-          onClick={() => {
+          onClick={async () => {
             if (problemType === "risk") {
-              console.log({ problemSettings });
               const probabilitySum = problemSettings.probabilities?.reduce(
                 (sum, currentValue) => (sum += currentValue),
                 0
               );
-              if (probabilitySum !== 1) {
+              if (probabilitySum && Math.abs(1.0 - probabilitySum) > 1e-6) {
                 alert(
                   `Expected probability sum to be 1. Instead received ${probabilitySum}`
                 );
+              } else {
+                const response = await fetch(`http://localhost:8000/risk`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    params: { ...problemSettings },
+                    minProfit: problemSettings.minProfit,
+                  }),
+                });
+                const { data } = (await response.json()) as {
+                  data: {
+                    tag: string;
+                    value: number;
+                    z: Array<number>;
+                  }[];
+                };
+                riskResultsHandler(data);
+                onModalHideHandler(false);
               }
+            } else {
+              const response = await fetch(
+                `http://localhost:8000/uncertainty`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    params: { ...problemSettings },
+                    alpha: problemSettings.alpha,
+                  }),
+                }
+              );
+              const { data } = await response.json();
+              riskResultsHandler(data);
+              onModalHideHandler(false);
             }
           }}
         >
